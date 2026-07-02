@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import CompletionCalendar, { MONTH_FORMATTER } from "../features/habits/CompletionCalendar";
 import { formatLocalDate } from "../features/habits/dateUtils";
+import { getFrequencyBadgeClass, getFrequencyLabel } from "../features/habits/frequencyLabels";
 import { useHabit } from "../features/habits/useHabits";
 import { useHabitStats } from "../features/habits/useHabitStats";
 
@@ -40,7 +41,7 @@ export default function HabitDetailPage() {
     return <p className="page-status page-error">Failed to load habit.</p>;
   }
 
-  const streakLabel = habit.frequency === "Daily" ? "day streak" : "week streak";
+  const streakLabel = habit.frequency === "Weekly" ? "week streak" : "day streak";
   const monthLabel = isViewingCurrentMonth
     ? "this month"
     : MONTH_FORMATTER.format(new Date(viewedYear, viewedMonth - 1, 1));
@@ -53,8 +54,8 @@ export default function HabitDetailPage() {
 
       <header className="habit-detail-header">
         <h1>{habit.name}</h1>
-        <span className={`habit-badge habit-badge-${habit.frequency.toLowerCase()}`}>
-          {habit.frequency}
+        <span className={`habit-badge ${getFrequencyBadgeClass(habit.frequency)}`}>
+          {getFrequencyLabel(habit.frequency, habit.daysOfWeek)}
         </span>
       </header>
 

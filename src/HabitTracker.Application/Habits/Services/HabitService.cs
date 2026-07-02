@@ -3,6 +3,7 @@ using HabitTracker.Application.Habits.Dtos;
 using HabitTracker.Application.Habits.Interfaces;
 using HabitTracker.Application.Habits.Mapping;
 using HabitTracker.Domain.Entities;
+using HabitTracker.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace HabitTracker.Application.Habits.Services;
@@ -39,6 +40,7 @@ public class HabitService(IApplicationDbContext db) : IHabitService
             Name = request.Name,
             Description = request.Description,
             Frequency = request.Frequency,
+            DaysOfWeek = request.Frequency == HabitFrequency.SpecificDays ? request.DaysOfWeek?.ToDaysOfWeekMask() : null,
             CreatedAt = DateTime.UtcNow,
             IsArchived = false
         };
@@ -60,6 +62,7 @@ public class HabitService(IApplicationDbContext db) : IHabitService
         habit.Name = request.Name;
         habit.Description = request.Description;
         habit.Frequency = request.Frequency;
+        habit.DaysOfWeek = request.Frequency == HabitFrequency.SpecificDays ? request.DaysOfWeek?.ToDaysOfWeekMask() : null;
 
         await db.SaveChangesAsync(cancellationToken);
 
@@ -201,10 +204,12 @@ public class HabitService(IApplicationDbContext db) : IHabitService
 
     private static HabitStatsResponse BuildStats(Habit habit, IReadOnlyList<DateOnly> completedDates, DateOnly today)
     {
-        var streak = HabitStatsCalculator.CalculateStreak(habit.Frequency, completedDates, today);
-        var monthlyRate = HabitStatsCalculator.CalculateMonthlyRate(habit.Frequency, completedDates, today);
-        var completedThisMonth = HabitStatsCalculator.CountCompletedThisMonth(completedDates, today);
+        var habitCreatedAt = DateOnly.FromDateTime(habit.CreatedAt);
 
-        return new HabitStatsResponse(habit.Id, streak, monthlyRate, habit.Frequency, completedThisMonth, today.Day);
+        var streak = HabitStatsCalculator.CalculateStreak(habit.Frequency, habit.DaysOfWeek, habitCreatedAt, completedDates, today);
+        var monthlyRate = HabitStatsCalculator.CalculateMonthlyRate(habit.Frequency, habit.DaysOfWeek, habitCreatedAt, completedDates, today);
+        var (completedThisMonth, daysElapsedThisMonth) = HabitStatsCalculator.CalculateMonthlyProgress(habit.Frequency, habit.DaysOfWeek, habitCreatedAt, completedDates, today);
+
+        return new HabitStatsResponse(habit.Id, streak, monthlyRate, habit.Frequency, completedThisMonth, daysElapsedThisMonth);
     }
 }

@@ -9,6 +9,7 @@ public class Habit
     public string Name { get; set; } = null!;
     public string? Description { get; set; }
     public HabitFrequency Frequency { get; set; }
+    public DaysOfWeekMask? DaysOfWeek { get; set; }
     public DateTime CreatedAt { get; set; }
     public bool IsArchived { get; set; }
 

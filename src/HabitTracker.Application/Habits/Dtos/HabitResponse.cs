@@ -7,5 +7,6 @@ public record HabitResponse(
     string Name,
     string? Description,
     HabitFrequency Frequency,
+    IReadOnlyList<DayOfWeek>? DaysOfWeek,
     DateTime CreatedAt,
     bool IsArchived);

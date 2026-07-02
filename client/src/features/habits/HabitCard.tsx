@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Modal from "../../components/Modal";
 import type { Habit } from "../../types/habit";
 import { formatLocalDate } from "./dateUtils";
+import { getFrequencyBadgeClass, getFrequencyLabel } from "./frequencyLabels";
 import HabitForm from "./HabitForm";
 import { useArchiveHabit, useUpdateHabit } from "./useHabitMutations";
 import { useHabitStats } from "./useHabitStats";
@@ -59,8 +60,8 @@ export default function HabitCard({ habit }: HabitCardProps) {
       <div className="habit-info">
         <div className="habit-name-row">
           <span className="habit-name">{habit.name}</span>
-          <span className={`habit-badge habit-badge-${habit.frequency.toLowerCase()}`}>
-            {habit.frequency}
+          <span className={`habit-badge ${getFrequencyBadgeClass(habit.frequency)}`}>
+            {getFrequencyLabel(habit.frequency, habit.daysOfWeek)}
           </span>
           {stats && stats.currentStreak > 0 && (
             <span className="streak-badge">🔥 {stats.currentStreak}</span>
@@ -85,6 +86,7 @@ export default function HabitCard({ habit }: HabitCardProps) {
               name: habit.name,
               description: habit.description ?? "",
               frequency: habit.frequency,
+              daysOfWeek: habit.daysOfWeek ?? [],
             }}
             submitLabel="Save"
             isSubmitting={updateHabit.isPending}

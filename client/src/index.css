@@ -204,6 +204,16 @@ body {
   color: #6d28d9;
 }
 
+.habit-badge-specific-days {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.habit-badge-every-other-day {
+  background: #dcfce7;
+  color: #15803d;
+}
+
 .habit-description {
   margin: 0;
   color: #6b7280;
@@ -281,6 +291,28 @@ body {
   border: 1px solid #999;
   border-radius: 4px;
   font-family: inherit;
+}
+
+.day-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.day-picker-option {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+  border: 1px solid #999;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.day-picker-option-selected {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
 }
 
 .habit-form-actions {
