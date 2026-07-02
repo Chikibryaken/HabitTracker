@@ -4,7 +4,7 @@ A full-stack habit tracker with JWT-based authentication, built with .NET 10 and
 
 ## About
 
-HabitTracker lets a user register, create daily or weekly habits, mark them done, and see progress over time - current streak, monthly completion rate, and a GitHub-style activity calendar. It was built as a portfolio project to demonstrate a complete, production-shaped slice of full-stack work: a layered .NET backend with a relational schema and EF Core migrations, cookie-free JWT authentication with rotating refresh tokens, and a React + TypeScript frontend where all server state goes through TanStack Query (no ad-hoc `useState` mirrors of API data).
+HabitTracker lets a user register, create habits on a flexible schedule (daily, weekly, specific weekdays, or every other day), mark them done, and see progress over time - current streak, monthly completion rate, and a GitHub-style activity calendar. It was built as a portfolio project to demonstrate a complete, production-shaped slice of full-stack work: a layered .NET backend with a relational schema and EF Core migrations, cookie-free JWT authentication with rotating refresh tokens, and a React + TypeScript frontend where all server state goes through TanStack Query (no ad-hoc `useState` mirrors of API data).
 
 [Live demo](#) · [API](#)
 
@@ -40,7 +40,7 @@ HabitTracker lets a user register, create daily or weekly habits, mark them done
 - Email/password registration and login
 - JWT access tokens with rotating, revocable refresh tokens (hashed at rest, one-time use)
 - Habit CRUD (create, edit, archive, delete), scoped per authenticated user
-- Daily or weekly habit frequency
+- Four scheduling modes: daily, weekly, specific weekdays (e.g. Mon/Wed/Fri), or every other day
 - Idempotent "mark done" / "unmark" for a specific date
 - Per-habit stats: current streak, monthly completion rate, days completed vs. days elapsed
 - Activity calendar per habit - click a past day to backfill a missed entry, navigate between months
@@ -76,6 +76,7 @@ client/src/
 - **Stats (streak, monthly completion rate) are computed on every request from raw `HabitCompletion` rows**, not denormalized/cached. Simpler and always correct, at the cost of recomputing on each read - acceptable at pet-project scale.
 - **"Today" is the client's local date**, sent explicitly to the API (e.g. `?today=2026-07-02`) rather than derived from the server clock, so streaks make sense in the user's own timezone. The server validates that the date isn't in the future, but there's no server-side timezone awareness beyond that - a user traveling across timezones mid-day could see edge-case behavior.
 - **Weekly-frequency habits use a simplified v1 model**: a streak counts consecutive ISO weeks with at least one completion, and the monthly rate is the fraction of the month's elapsed weeks with a completion. It intentionally doesn't try to handle habits with a target count greater than 1 per period.
+- **Specific-weekdays and every-other-day habits share one "scheduled day" abstraction** with the daily case: streak and monthly-rate math walk day by day, skip any date that isn't scheduled (it neither counts nor breaks the streak), and give "today" the same one-day grace period daily habits get. "Every other day" always uses a fixed 2-day interval anchored to the habit's creation date - not a configurable interval or a user-chosen anchor. A completion logged on a non-scheduled day (e.g. marking a Mon/Wed/Fri habit done on a Tuesday) is still stored and shown on the calendar, it just doesn't count toward that habit's streak or completion rate.
 - **Database migrations run automatically on startup in Production** (`Program.cs`, wrapped in try/catch with logging). This keeps deployment to a single Railway service simple, but it's a known compromise: with more than one instance running concurrently, two instances migrating at once can race. A real multi-instance deployment should run migrations as a separate release step instead.
 
 ## Getting Started (local)
@@ -186,7 +187,7 @@ All routes are prefixed with `/api`. Authenticated routes expect `Authorization:
 dotnet test tests/HabitTracker.Tests
 ```
 
-Covers `HabitStatsCalculator` - the pure functions behind streak and monthly-completion-rate math - with 16 unit tests over edge cases: empty completion sets, gaps that break a streak, a missing "today" that doesn't break it, unsorted input, and daily/weekly dispatch.
+Covers `HabitStatsCalculator` - the pure functions behind streak and monthly-completion-rate math - with 27 unit tests over edge cases: empty completion sets, gaps that break a streak, a missing "today" that doesn't break it, unsorted input, non-scheduled days being skipped without breaking a streak, and dispatch across all four frequency types (daily, weekly, specific weekdays, every other day).
 
 ## Possible Improvements
 
