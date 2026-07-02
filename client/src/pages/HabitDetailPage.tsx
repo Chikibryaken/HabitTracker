@@ -2,7 +2,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import CompletionCalendar from "../features/habits/CompletionCalendar";
 import { formatLocalDate } from "../features/habits/dateUtils";
 import { useHabit } from "../features/habits/useHabits";
-import { useHabitCompletions } from "../features/habits/useHabitCompletions";
 import { useHabitStats } from "../features/habits/useHabitStats";
 
 export default function HabitDetailPage() {
@@ -11,15 +10,9 @@ export default function HabitDetailPage() {
   const habitId = id ?? "";
 
   const today = formatLocalDate(new Date());
-  const monthStart = `${today.slice(0, 7)}-01`;
 
   const { data: habit, isLoading: isHabitLoading, isError: isHabitError } = useHabit(habitId);
   const { data: stats, isLoading: isStatsLoading } = useHabitStats(habitId, today);
-  const { data: completions, isLoading: isCompletionsLoading } = useHabitCompletions(
-    habitId,
-    monthStart,
-    today,
-  );
 
   if (isHabitLoading) {
     return <p className="page-status">Loading habit...</p>;
@@ -67,12 +60,7 @@ export default function HabitDetailPage() {
         </div>
       )}
 
-      <h2>This month</h2>
-      {isCompletionsLoading ? (
-        <p className="page-status">Loading calendar...</p>
-      ) : (
-        <CompletionCalendar completions={completions ?? []} today={today} />
-      )}
+      <CompletionCalendar habitId={habitId} today={today} />
     </div>
   );
 }

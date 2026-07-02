@@ -156,33 +156,34 @@ body {
   color: #b45309;
 }
 
-.habit-checkbox {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  cursor: pointer;
-}
-
-.habit-checkbox input {
+.habit-checkbox-input {
   margin-top: 0.2rem;
   width: 1.1rem;
   height: 1.1rem;
+  flex-shrink: 0;
+  cursor: pointer;
 }
 
 .habit-info {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  min-width: 0;
+  flex: 1;
 }
 
 .habit-name-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .habit-name {
   font-weight: 600;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .habit-badge {
@@ -207,6 +208,8 @@ body {
   margin: 0;
   color: #6b7280;
   font-size: 0.875rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .habit-card-actions {
@@ -339,15 +342,21 @@ body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .habit-detail-header h1 {
   margin: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-width: 0;
 }
 
 .habit-detail-description {
   color: #6b7280;
   margin-top: 0.5rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .stats-panel {
@@ -381,7 +390,41 @@ body {
 .calendar-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.calendar-nav button {
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: #e5e7eb;
+  color: #111827;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.calendar-nav button:disabled {
+  background: transparent;
+  color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.calendar-title {
+  font-weight: 600;
+  min-width: 9rem;
+  text-align: center;
 }
 
 .calendar-grid {
@@ -402,14 +445,18 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  border: none;
   border-radius: 4px;
   font-size: 0.75rem;
+  font-family: inherit;
   background: #f3f4f6;
   color: #111827;
+  cursor: pointer;
 }
 
 .calendar-cell-blank {
   background: transparent;
+  cursor: default;
 }
 
 .calendar-cell-completed {
@@ -418,14 +465,24 @@ body {
   font-weight: 600;
 }
 
+.calendar-cell-completed:hover {
+  background: #15803d;
+}
+
 .calendar-cell-missed {
   background: #f3f4f6;
   color: #9ca3af;
 }
 
+.calendar-cell-missed:hover {
+  background: #e5e7eb;
+  color: #111827;
+}
+
 .calendar-cell-future {
   background: transparent;
   color: #d1d5db;
+  cursor: not-allowed;
 }
 
 .profile-page {

@@ -46,26 +46,28 @@ export default function HabitCard({ habit }: HabitCardProps) {
 
   return (
     <div className="habit-card" onClick={handleCardClick}>
-      <label className="habit-checkbox" onClick={stopClickPropagation}>
-        <input
-          type="checkbox"
-          checked={Boolean(isCompletedToday)}
-          disabled={isCompletionLoading || toggleCompletion.isPending}
-          onChange={handleToggleChange}
-        />
-        <div className="habit-info">
-          <div className="habit-name-row">
-            <span className="habit-name">{habit.name}</span>
-            <span className={`habit-badge habit-badge-${habit.frequency.toLowerCase()}`}>
-              {habit.frequency}
-            </span>
-            {stats && stats.currentStreak > 0 && (
-              <span className="streak-badge">🔥 {stats.currentStreak}</span>
-            )}
-          </div>
-          {habit.description && <p className="habit-description">{habit.description}</p>}
+      <input
+        type="checkbox"
+        className="habit-checkbox-input"
+        aria-label={`Mark "${habit.name}" done today`}
+        checked={Boolean(isCompletedToday)}
+        disabled={isCompletionLoading || toggleCompletion.isPending}
+        onClick={stopClickPropagation}
+        onChange={handleToggleChange}
+      />
+
+      <div className="habit-info">
+        <div className="habit-name-row">
+          <span className="habit-name">{habit.name}</span>
+          <span className={`habit-badge habit-badge-${habit.frequency.toLowerCase()}`}>
+            {habit.frequency}
+          </span>
+          {stats && stats.currentStreak > 0 && (
+            <span className="streak-badge">🔥 {stats.currentStreak}</span>
+          )}
         </div>
-      </label>
+        {habit.description && <p className="habit-description">{habit.description}</p>}
+      </div>
 
       <div className="habit-card-actions" onClick={stopClickPropagation}>
         <button type="button" onClick={() => setIsEditing(true)}>

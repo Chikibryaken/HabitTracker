@@ -21,9 +21,21 @@ interface ToggleCompletionVariables {
   isCurrentlyCompleted: boolean;
 }
 
-interface ToggleCompletionContext {
+interface CompletionsCacheEntry {
   queryKey: QueryKey;
-  previousCompletions: Completion[] | undefined;
+  previousData: Completion[];
+}
+
+interface ToggleCompletionContext {
+  entries: CompletionsCacheEntry[];
+}
+
+function completionsRangeOf(queryKey: QueryKey): { from: string; to: string } | null {
+  const last = queryKey[queryKey.length - 1];
+  if (last && typeof last === "object" && "from" in last && "to" in last) {
+    return last as { from: string; to: string };
+  }
+  return null;
 }
 
 export function useToggleCompletion() {
@@ -38,28 +50,43 @@ export function useToggleCompletion() {
       }
     },
     onMutate: async ({ habitId, date, isCurrentlyCompleted }) => {
-      const queryKey = habitKeys.completions(habitId, date, date);
+      // Every cached completions query for this habit whose [from, to] range covers the
+      // toggled date needs patching — not just the exact query that triggered the toggle.
+      // This keeps the "today" checkbox, the month calendar, and any other open range in sync.
+      const completionsPrefix = [...habitKeys.detail(habitId), "completions"];
 
-      await queryClient.cancelQueries({ queryKey });
+      await queryClient.cancelQueries({ queryKey: completionsPrefix });
 
-      const previousCompletions = queryClient.getQueryData<Completion[]>(queryKey);
+      const entries: CompletionsCacheEntry[] = [];
 
-      const optimisticCompletions: Completion[] = isCurrentlyCompleted
-        ? []
-        : [{ date, createdAt: new Date().toISOString() }];
+      for (const [queryKey, data] of queryClient.getQueriesData<Completion[]>({
+        queryKey: completionsPrefix,
+      })) {
+        const range = completionsRangeOf(queryKey);
+        if (!range || !data || date < range.from || date > range.to) {
+          continue;
+        }
 
-      queryClient.setQueryData<Completion[]>(queryKey, optimisticCompletions);
+        entries.push({ queryKey, previousData: data });
 
-      return { queryKey, previousCompletions };
+        const nextData = isCurrentlyCompleted
+          ? data.filter((completion) => completion.date !== date)
+          : [...data, { date, createdAt: new Date().toISOString() }];
+
+        queryClient.setQueryData<Completion[]>(queryKey, nextData);
+      }
+
+      return { entries };
     },
     onError: (_error, _variables, context) => {
-      if (context) {
-        queryClient.setQueryData(context.queryKey, context.previousCompletions);
-      }
+      context?.entries.forEach(({ queryKey, previousData }) => {
+        queryClient.setQueryData(queryKey, previousData);
+      });
     },
     onSettled: (_data, _error, variables) => {
-      const queryKey = habitKeys.completions(variables.habitId, variables.date, variables.date);
-      queryClient.invalidateQueries({ queryKey });
+      // Broad on purpose: a completion change can affect completions (any range), stats
+      // (streak/rate), and the habit itself — invalidate everything under this habit.
+      queryClient.invalidateQueries({ queryKey: habitKeys.detail(variables.habitId) });
     },
   });
 }
