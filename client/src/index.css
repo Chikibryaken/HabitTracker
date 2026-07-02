@@ -1,0 +1,473 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 320px;
+  padding: 2rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.auth-form h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+}
+
+.auth-form label {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.auth-form input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #999;
+  border-radius: 4px;
+}
+
+.auth-form button {
+  margin-top: 0.5rem;
+  padding: 0.6rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  background: #2563eb;
+  color: #fff;
+  cursor: pointer;
+}
+
+.auth-form button:disabled {
+  background: #93a8d8;
+  cursor: not-allowed;
+}
+
+.auth-switch {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.form-error {
+  margin: 0;
+  color: #dc2626;
+  font-size: 0.875rem;
+}
+
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.dashboard-email {
+  font-weight: 600;
+  color: inherit;
+  text-decoration: none;
+}
+
+.dashboard-email:hover {
+  text-decoration: underline;
+}
+
+.dashboard-header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.dashboard-page button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 4px;
+  background: #2563eb;
+  color: #fff;
+  cursor: pointer;
+}
+
+.dashboard-page button.logout-button {
+  background: #6b7280;
+}
+
+.dashboard-page button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.habit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.habit-list-status {
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.habit-list-error {
+  color: #dc2626;
+}
+
+.habit-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.habit-card:hover {
+  border-color: #2563eb;
+}
+
+.streak-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #b45309;
+}
+
+.habit-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.habit-checkbox input {
+  margin-top: 0.2rem;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.habit-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.habit-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.habit-name {
+  font-weight: 600;
+}
+
+.habit-badge {
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.habit-badge-daily {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.habit-badge-weekly {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.habit-description {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.habit-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.habit-card-actions button {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1rem;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 400px;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background: canvas;
+  color: canvastext;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.habit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.habit-form label {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.habit-form input,
+.habit-form textarea,
+.habit-form select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #999;
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+.habit-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.habit-form-actions button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.habit-form-actions button[type="submit"] {
+  background: #2563eb;
+  color: #fff;
+}
+
+.habit-form-actions button[type="button"] {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.page-status {
+  color: #6b7280;
+  font-size: 0.95rem;
+  padding: 2rem;
+}
+
+.page-error {
+  color: #dc2626;
+}
+
+.back-button {
+  align-self: flex-start;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 4px;
+  background: #e5e7eb;
+  color: #111827;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.habit-detail-page {
+  display: flex;
+  flex-direction: column;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.habit-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.habit-detail-header h1 {
+  margin: 0;
+}
+
+.habit-detail-description {
+  color: #6b7280;
+  margin-top: 0.5rem;
+}
+
+.stats-panel {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.stat-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+.calendar-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
+}
+
+.calendar-weekday {
+  text-align: center;
+  font-size: 0.7rem;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.calendar-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.calendar-cell-blank {
+  background: transparent;
+}
+
+.calendar-cell-completed {
+  background: #16a34a;
+  color: #fff;
+  font-weight: 600;
+}
+
+.calendar-cell-missed {
+  background: #f3f4f6;
+  color: #9ca3af;
+}
+
+.calendar-cell-future {
+  background: transparent;
+  color: #d1d5db;
+}
+
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.profile-page h1 {
+  margin: 0 0 1rem;
+}
+
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.profile-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.profile-label {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.profile-page .logout-button {
+  align-self: flex-start;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 4px;
+  background: #6b7280;
+  color: #fff;
+  cursor: pointer;
+}
