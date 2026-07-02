@@ -4,15 +4,15 @@ A full-stack habit tracker with JWT-based authentication, built with .NET 10 and
 
 ## About
 
-HabitTracker lets a user register, create daily or weekly habits, mark them done, and see progress over time — current streak, monthly completion rate, and a GitHub-style activity calendar. It was built as a portfolio project to demonstrate a complete, production-shaped slice of full-stack work: a layered .NET backend with a relational schema and EF Core migrations, cookie-free JWT authentication with rotating refresh tokens, and a React + TypeScript frontend where all server state goes through TanStack Query (no ad-hoc `useState` mirrors of API data).
+HabitTracker lets a user register, create daily or weekly habits, mark them done, and see progress over time - current streak, monthly completion rate, and a GitHub-style activity calendar. It was built as a portfolio project to demonstrate a complete, production-shaped slice of full-stack work: a layered .NET backend with a relational schema and EF Core migrations, cookie-free JWT authentication with rotating refresh tokens, and a React + TypeScript frontend where all server state goes through TanStack Query (no ad-hoc `useState` mirrors of API data).
 
 [Live demo](#) · [API](#)
 
 ## Screenshots
 
-| Dashboard | Habit detail & calendar | Login |
-|---|---|---|
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Habit detail](docs/screenshots/habit-detail.png) | ![Login](docs/screenshots/login.png) |
+| Dashboard                        | Habit detail & calendar                | Login                    |
+| -------------------------------- | -------------------------------------- | ------------------------ |
+| ![Dashboard](docs/dashboard.png) | ![Habit detail](docs/habit-detail.png) | ![Login](docs/login.png) |
 
 ## Tech Stack
 
@@ -43,17 +43,17 @@ HabitTracker lets a user register, create daily or weekly habits, mark them done
 - Daily or weekly habit frequency
 - Idempotent "mark done" / "unmark" for a specific date
 - Per-habit stats: current streak, monthly completion rate, days completed vs. days elapsed
-- Activity calendar per habit — click a past day to backfill a missed entry, navigate between months
+- Activity calendar per habit - click a past day to backfill a missed entry, navigate between months
 - Dashboard with streak badges per habit card
 - User profile page (email, join date, active habit count)
 
 ## Architecture
 
-The backend follows a layered structure so business rules stay independent of EF Core, ASP.NET Core, and each other's implementation details — the `Application` layer only depends on `Domain` and abstractions it defines itself (`IApplicationDbContext`, `ITokenService`, ...), which `Infrastructure` implements. This keeps the core logic (validation, streak/percentage calculation, token issuance rules) unit-testable without a database or an HTTP pipeline.
+The backend follows a layered structure so business rules stay independent of EF Core, ASP.NET Core, and each other's implementation details - the `Application` layer only depends on `Domain` and abstractions it defines itself (`IApplicationDbContext`, `ITokenService`, ...), which `Infrastructure` implements. This keeps the core logic (validation, streak/percentage calculation, token issuance rules) unit-testable without a database or an HTTP pipeline.
 
 ```
 src/
-├── HabitTracker.Domain            # Entities, enums — no dependencies on other layers
+├── HabitTracker.Domain            # Entities, enums - no dependencies on other layers
 ├── HabitTracker.Application       # DTOs, service interfaces + implementations, FluentValidation validators
 ├── HabitTracker.Infrastructure    # EF Core DbContext & configurations, JWT issuing, password/token hashing
 └── HabitTracker.Api               # Minimal API endpoint definitions, DI composition, Program.cs
@@ -71,10 +71,10 @@ client/src/
 
 ## Key Technical Decisions & Trade-offs
 
-- **Refresh tokens are hashed (SHA-256) at rest and rotated on every use.** Each refresh call revokes the old token and issues a new pair, and logout revokes the token explicitly. Reuse detection (auto-revoking a whole token family if a already-used token is replayed) is **not** implemented — see Possible Improvements.
-- **Access and refresh tokens are stored in `localStorage` on the client**, not `httpOnly` cookies. This is simpler for a single-frontend pet project and avoids CORS/cookie complications from the API (Railway) and frontend (Vercel) living on different domains — but it is more exposed to XSS than an `httpOnly` cookie would be.
-- **Stats (streak, monthly completion rate) are computed on every request from raw `HabitCompletion` rows**, not denormalized/cached. Simpler and always correct, at the cost of recomputing on each read — acceptable at pet-project scale.
-- **"Today" is the client's local date**, sent explicitly to the API (e.g. `?today=2026-07-02`) rather than derived from the server clock, so streaks make sense in the user's own timezone. The server validates that the date isn't in the future, but there's no server-side timezone awareness beyond that — a user traveling across timezones mid-day could see edge-case behavior.
+- **Refresh tokens are hashed (SHA-256) at rest and rotated on every use.** Each refresh call revokes the old token and issues a new pair, and logout revokes the token explicitly. Reuse detection (auto-revoking a whole token family if a already-used token is replayed) is **not** implemented - see Possible Improvements.
+- **Access and refresh tokens are stored in `localStorage` on the client**, not `httpOnly` cookies. This is simpler for a single-frontend pet project and avoids CORS/cookie complications from the API (Railway) and frontend (Vercel) living on different domains - but it is more exposed to XSS than an `httpOnly` cookie would be.
+- **Stats (streak, monthly completion rate) are computed on every request from raw `HabitCompletion` rows**, not denormalized/cached. Simpler and always correct, at the cost of recomputing on each read - acceptable at pet-project scale.
+- **"Today" is the client's local date**, sent explicitly to the API (e.g. `?today=2026-07-02`) rather than derived from the server clock, so streaks make sense in the user's own timezone. The server validates that the date isn't in the future, but there's no server-side timezone awareness beyond that - a user traveling across timezones mid-day could see edge-case behavior.
 - **Weekly-frequency habits use a simplified v1 model**: a streak counts consecutive ISO weeks with at least one completion, and the monthly rate is the fraction of the month's elapsed weeks with a completion. It intentionally doesn't try to handle habits with a target count greater than 1 per period.
 - **Database migrations run automatically on startup in Production** (`Program.cs`, wrapped in try/catch with logging). This keeps deployment to a single Railway service simple, but it's a known compromise: with more than one instance running concurrently, two instances migrating at once can race. A real multi-instance deployment should run migrations as a separate release step instead.
 
@@ -96,7 +96,7 @@ This starts `postgres:16` on port `5432` with database/user/password all set to 
 
 ### 2. Configure the API
 
-Create `src/HabitTracker.Api/appsettings.Development.json` (gitignored — not committed) with:
+Create `src/HabitTracker.Api/appsettings.Development.json` (gitignored - not committed) with:
 
 ```json
 {
@@ -121,7 +121,7 @@ dotnet ef database update --project src/HabitTracker.Infrastructure --startup-pr
 dotnet run --project src/HabitTracker.Api
 ```
 
-The API listens on `http://localhost:5290` (and `https://localhost:7289`) by default — see `src/HabitTracker.Api/Properties/launchSettings.json`. Swagger UI is available at `/swagger` in Development.
+The API listens on `http://localhost:5290` (and `https://localhost:7289`) by default - see `src/HabitTracker.Api/Properties/launchSettings.json`. Swagger UI is available at `/swagger` in Development.
 
 ### 4. Run the frontend
 
@@ -137,18 +137,18 @@ Open `http://localhost:5173`. The Vite dev server proxies `/api` requests to the
 
 ### Backend
 
-| Variable | Used for | Local (Development) | Production (Railway) |
-|---|---|---|---|
-| `ConnectionStrings__Postgres` | Postgres connection string | Set in `appsettings.Development.json` | Optional — takes priority over `DATABASE_URL` if set |
-| `DATABASE_URL` | Postgres connection URL (`postgresql://user:pass@host:port/db`) | Not used | Reference to Railway's Postgres plugin; parsed into a Npgsql connection string automatically |
-| `Jwt__Issuer` | JWT `iss` claim | `appsettings.Development.json` | Required |
-| `Jwt__Audience` | JWT `aud` claim | `appsettings.Development.json` | Required |
-| `Jwt__Key` | JWT signing key (HMAC-SHA256, ≥32 bytes) | `appsettings.Development.json` | Required — use a different value than local |
-| `Jwt__AccessTokenMinutes` | Access token lifetime | `appsettings.Development.json` | Required |
-| `Jwt__RefreshTokenDays` | Refresh token lifetime | `appsettings.Development.json` | Required |
-| `FRONTEND_URL` | Allowed CORS origin (in addition to `localhost:5173`) | Not needed | Set to the deployed Vercel URL |
-| `PORT` | Port Kestrel binds to (`0.0.0.0:$PORT`) | Not needed | Set automatically by Railway |
-| `ASPNETCORE_ENVIRONMENT` | Enables production behavior (auto-migrate, disables Swagger) | `Development` (via `launchSettings.json`) | `Production` |
+| Variable                      | Used for                                                        | Local (Development)                       | Production (Railway)                                                                         |
+| ----------------------------- | --------------------------------------------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `ConnectionStrings__Postgres` | Postgres connection string                                      | Set in `appsettings.Development.json`     | Optional - takes priority over `DATABASE_URL` if set                                         |
+| `DATABASE_URL`                | Postgres connection URL (`postgresql://user:pass@host:port/db`) | Not used                                  | Reference to Railway's Postgres plugin; parsed into a Npgsql connection string automatically |
+| `Jwt__Issuer`                 | JWT `iss` claim                                                 | `appsettings.Development.json`            | Required                                                                                     |
+| `Jwt__Audience`               | JWT `aud` claim                                                 | `appsettings.Development.json`            | Required                                                                                     |
+| `Jwt__Key`                    | JWT signing key (HMAC-SHA256, ≥32 bytes)                        | `appsettings.Development.json`            | Required - use a different value than local                                                  |
+| `Jwt__AccessTokenMinutes`     | Access token lifetime                                           | `appsettings.Development.json`            | Required                                                                                     |
+| `Jwt__RefreshTokenDays`       | Refresh token lifetime                                          | `appsettings.Development.json`            | Required                                                                                     |
+| `FRONTEND_URL`                | Allowed CORS origin (in addition to `localhost:5173`)           | Not needed                                | Set to the deployed Vercel URL                                                               |
+| `PORT`                        | Port Kestrel binds to (`0.0.0.0:$PORT`)                         | Not needed                                | Set automatically by Railway                                                                 |
+| `ASPNETCORE_ENVIRONMENT`      | Enables production behavior (auto-migrate, disables Swagger)    | `Development` (via `launchSettings.json`) | `Production`                                                                                 |
 
 ### Frontend
 
@@ -186,7 +186,7 @@ All routes are prefixed with `/api`. Authenticated routes expect `Authorization:
 dotnet test tests/HabitTracker.Tests
 ```
 
-Covers `HabitStatsCalculator` — the pure functions behind streak and monthly-completion-rate math — with 16 unit tests over edge cases: empty completion sets, gaps that break a streak, a missing "today" that doesn't break it, unsorted input, and daily/weekly dispatch.
+Covers `HabitStatsCalculator` - the pure functions behind streak and monthly-completion-rate math - with 16 unit tests over edge cases: empty completion sets, gaps that break a streak, a missing "today" that doesn't break it, unsorted input, and daily/weekly dispatch.
 
 ## Possible Improvements
 
