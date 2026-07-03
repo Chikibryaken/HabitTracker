@@ -6,7 +6,7 @@ A full-stack habit tracker with JWT-based authentication, built with .NET 10 and
 
 HabitTracker lets a user register, create habits on a flexible schedule (daily, weekly, specific weekdays, or every other day), mark them done, and see progress over time - current streak, monthly completion rate, and a GitHub-style activity calendar. It was built as a portfolio project to demonstrate a complete, production-shaped slice of full-stack work: a layered .NET backend with a relational schema and EF Core migrations, cookie-free JWT authentication with rotating refresh tokens, and a React + TypeScript frontend where all server state goes through TanStack Query (no ad-hoc `useState` mirrors of API data).
 
-[Live demo](#) · [API](#)
+[Live demo](https://habit-tracker-sigma-nine-47.vercel.app) · [API](https://habittracker-production-c30a.up.railway.app)
 
 ## Screenshots
 
